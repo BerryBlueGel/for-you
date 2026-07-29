@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>给你</title>
+    <title>To my dearest</title>
     <style>
         * {
             margin: 0;
@@ -39,7 +39,6 @@
             transition: transform 1.2s ease-in-out;
         }
 
-        /* 合照 */
         .game-photo {
             width: 85%;
             max-width: 420px;
@@ -47,7 +46,6 @@
             box-shadow: 0 0 40px rgba(255, 105, 180, 0.2);
         }
 
-        /* 情头 + 爱心 */
         .avatar-heart-box {
             position: relative;
             width: 100%;
@@ -64,8 +62,8 @@
             height: 110px;
             border-radius: 50%;
             border: 4px solid;
-            box-shadow: 0 0 25px rgba(255, 255, 255, 0.25);
             overflow: hidden;
+            position: relative;
             z-index: 2;
         }
         .avatar-wrap.left {
@@ -82,46 +80,47 @@
             object-fit: cover;
         }
 
-        /* SVG 爱心 */
         .heart-svg {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 340px;
-            height: 300px;
-            z-index: 3;
+            width: 350px;
+            height: 310px;
+            z-index: 0;
             pointer-events: none;
             overflow: visible;
         }
         .heart-path {
             fill: none;
-            stroke: #ff69b4;
-            stroke-width: 3.5;
+            stroke: #ffd6e7;
+            stroke-width: 4;
             stroke-linecap: round;
             stroke-linejoin: round;
-            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.9));
         }
 
-        /* 长按按钮 - 带填充效果 */
         .hold-btn-wrap {
             position: relative;
-            display: inline-block;
             margin-top: 12px;
-        }
-        .hold-btn {
-            position: relative;
-            z-index: 1;
-            padding: 16px 52px;
-            border: 2px solid #ff69b4;
-            background: transparent;
-            color: #ff69b4;
-            font-size: 17px;
             border-radius: 50px;
-            cursor: pointer;
-            user-select: none;
-            transition: color 0.3s ease;
             overflow: hidden;
+            width: 180px;
+            height: 52px;
+        }
+        .btn-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50px;
+            animation: breathe 2s ease-in-out infinite;
+            z-index: 0;
+        }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
+            50% { box-shadow: 0 0 28px rgba(255, 105, 180, 0.9); }
         }
         .hold-btn-fill {
             position: absolute;
@@ -131,30 +130,28 @@
             width: 0%;
             background: #ff69b4;
             border-radius: 50px;
-            z-index: 0;
+            z-index: 1;
             transition: width 0.1s linear;
         }
-        @keyframes breathe {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
-            50% { box-shadow: 0 0 28px rgba(255, 105, 180, 0.9); }
-        }
-        .btn-glow {
-            animation: breathe 2s ease-in-out infinite;
+        .hold-btn {
+            position: relative;
+            z-index: 2;
+            width: 180px;
+            height: 52px;
+            border: 2px solid #ff69b4;
+            background: transparent;
+            color: #ff69b4;
+            font-size: 17px;
             border-radius: 50px;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.3s ease;
         }
 
-        /* 转场 */
         .slide-up {
             transform: translateY(-100%);
         }
 
-        /* 主页 */
         .main-page {
             position: fixed;
             top: 0;
@@ -189,11 +186,11 @@
                 <img src="左情头.jpg" alt="左边情头" class="avatar">
             </div>
 
-            <svg class="heart-svg" viewBox="-40 -10 320 250">
+            <svg class="heart-svg" viewBox="-45 -15 330 260">
                 <path class="heart-path" id="pathLeft"
-                      d="M 120 55 C 65 0, -10 20, -10 80 C -10 145, 55 180, 120 215" />
+                      d="M 120 60 C 60 0, -15 20, -15 80 C -15 145, 50 180, 120 215" />
                 <path class="heart-path" id="pathRight"
-                      d="M 120 55 C 175 0, 250 20, 250 80 C 250 145, 185 180, 120 215" />
+                      d="M 120 60 C 180 0, 255 20, 255 80 C 255 145, 190 180, 120 215" />
             </svg>
 
             <div class="avatar-wrap right">
@@ -201,7 +198,6 @@
             </div>
         </div>
 
-        <!-- 长按按钮区域 -->
         <div class="hold-btn-wrap">
             <div class="btn-glow"></div>
             <div class="hold-btn-fill" id="btnFill"></div>
@@ -210,7 +206,7 @@
     </div>
 
     <div class="main-page" id="mainPage">
-        欢迎来到我们的小世界 ✨
+        ✨
     </div>
 
     <script>
@@ -264,12 +260,9 @@
         }
 
         function updateAll() {
-            // 爱心线条
             pathLeft.style.strokeDashoffset = lenLeft * (1 - progress);
             pathRight.style.strokeDashoffset = lenRight * (1 - progress);
-            // 按钮填充进度
             btnFill.style.width = (progress * 100) + '%';
-            // 按钮文字颜色渐变：进度过半文字变白
             holdBtn.style.color = progress > 0.5 ? '#fff' : '#ff69b4';
         }
 
