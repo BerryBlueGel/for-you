@@ -19,56 +19,48 @@
             background: #000;
         }
 
-        /* 黑色内容区 */
         .black-wrap {
             position: fixed;
+            top: 0;
             left: 0;
-            bottom: 0;
             width: 100%;
-            height: 55%;
+            height: 100%;
             background: #000;
             z-index: 2;
-            border-radius: 24px 24px 0 0;
-            padding: 24px 20px 48px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 24px;
+            padding: 40px 20px;
             transition: transform 1.2s ease-in-out;
         }
 
         /* 合照 */
-        .photo-box {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
         .game-photo {
-            width: 82%;
-            max-width: 360px;
-            border-radius: 12px;
-            box-shadow: 0 0 30px rgba(255, 105, 180, 0.15);
+            width: 85%;
+            max-width: 420px;
+            border-radius: 14px;
+            box-shadow: 0 0 40px rgba(255, 105, 180, 0.2);
         }
 
-        /* 头像 + 爱心 */
+        /* 情头 + 爱心 */
         .avatar-heart-box {
             position: relative;
             width: 100%;
-            max-width: 480px;
-            height: 200px;
+            max-width: 500px;
+            height: 240px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 32px;
-            margin-top: 10px;
+            gap: 40px;
         }
         .avatar-wrap {
-            width: 90px;
-            height: 90px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             border: 3px solid #ff69b4;
-            box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.5);
             overflow: hidden;
             z-index: 2;
         }
@@ -84,8 +76,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 200px;
-            height: 180px;
+            width: 300px;
+            height: 280px;
             z-index: 1;
             pointer-events: none;
         }
@@ -94,18 +86,16 @@
             stroke: #ff69b4;
             stroke-width: 3;
             stroke-linecap: round;
-            filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.8));
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8));
         }
 
         /* 长按按钮 */
         .hold-btn {
-            margin-top: auto;
-            margin-bottom: 20px;
-            padding: 14px 40px;
+            padding: 16px 48px;
             border: 2px solid #ff69b4;
             background: transparent;
             color: #ff69b4;
-            font-size: 16px;
+            font-size: 17px;
             border-radius: 50px;
             cursor: pointer;
             user-select: none;
@@ -118,7 +108,7 @@
         }
         @keyframes breathe {
             0%, 100% { box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.8); }
+            50% { box-shadow: 0 0 28px rgba(255, 105, 180, 0.9); }
         }
 
         /* 转场 */
@@ -141,7 +131,7 @@
             align-items: center;
             justify-content: center;
             color: #d14787;
-            font-size: 22px;
+            font-size: 24px;
             z-index: 3;
             opacity: 0;
             transition: opacity 0.8s ease 0.5s;
@@ -155,15 +145,10 @@
 </head>
 <body>
 
-    <!-- 开场黑色区 -->
     <div class="black-wrap" id="blackWrap">
 
-        <!-- 合照 -->
-        <div class="photo-box">
-            <img src="合照.jpg" alt="合照" class="game-photo">
-        </div>
+        <img src="合照.jpg" alt="合照" class="game-photo">
 
-        <!-- 情头 + 爱心 -->
         <div class="avatar-heart-box">
             <div class="avatar-wrap">
                 <img src="左情头.jpg" alt="左边情头" class="avatar">
@@ -181,11 +166,9 @@
             </div>
         </div>
 
-        <!-- 长按按钮 -->
         <button class="hold-btn" id="holdBtn">长按进入</button>
     </div>
 
-    <!-- 主页 -->
     <div class="main-page" id="mainPage">
         欢迎来到我们的小世界 ✨
     </div>
