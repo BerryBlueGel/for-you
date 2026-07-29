@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>致宝宝</title>
+    <title>致~宝宝</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -601,13 +601,12 @@
             });
         }
 
-        // 延迟初始化，等元素渲染完
+        // 延迟初始化
         let positionsReady = false;
         function initPositions() {
             updatePositions();
             if (!positionsReady) {
                 positionsReady = true;
-                // 再等一帧确保 offsetWidth 准确
                 requestAnimationFrame(() => {
                     updatePositions();
                 });
@@ -618,14 +617,18 @@
             setTimeout(updatePositions, 150);
         });
 
-        // 拖动逻辑 —— 加阈值区分点击和拖动
+        // 拖动 —— 加阈值区分点击和拖动，弹层内不触发拖动
         let isDragging = false;
         let dragMoved = false;
         let lastY = 0;
         let momentum = 0;
-        const DRAG_THRESHOLD = 5; // 移动超过 5px 才算拖动
+        const DRAG_THRESHOLD = 5;
 
         window.addEventListener('mousedown', (e) => {
+            if (e.target.closest('.detail-card') || e.target.closest('.image-overlay')) {
+                isDragging = false;
+                return;
+            }
             isDragging = true;
             dragMoved = false;
             lastY = e.clientY;
@@ -647,9 +650,13 @@
             setTimeout(() => { dragMoved = false; }, 50);
         });
 
-        // 触摸拖动
         window.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
+                const target = e.target;
+                if (target.closest('.detail-card') || target.closest('.image-overlay')) {
+                    isDragging = false;
+                    return;
+                }
                 isDragging = true;
                 dragMoved = false;
                 lastY = e.touches[0].clientY;
