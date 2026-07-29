@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>给你</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Microsoft Yahei", sans-serif;
+            transition: background-color 1.2s ease;
+            background: #000;
+        }
+
+        /* 黑色内容区 */
+        .black-wrap {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 55%;
+            background: #000;
+            z-index: 2;
+            border-radius: 24px 24px 0 0;
+            padding: 24px 20px 48px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 1.2s ease-in-out;
+        }
+
+        /* 合照 */
+        .photo-box {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .game-photo {
+            width: 82%;
+            max-width: 360px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.15);
+        }
+
+        /* 头像 + 爱心 */
+        .avatar-heart-box {
+            position: relative;
+            width: 100%;
+            max-width: 480px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 32px;
+            margin-top: 10px;
+        }
+        .avatar-wrap {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid #ff69b4;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+            overflow: hidden;
+            z-index: 2;
+        }
+        .avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* SVG 爱心 */
+        .heart-svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 180px;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .heart-path {
+            fill: none;
+            stroke: #ff69b4;
+            stroke-width: 3;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 6px rgba(255, 105, 180, 0.8));
+        }
+
+        /* 长按按钮 */
+        .hold-btn {
+            margin-top: auto;
+            margin-bottom: 20px;
+            padding: 14px 40px;
+            border: 2px solid #ff69b4;
+            background: transparent;
+            color: #ff69b4;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            animation: breathe 2s ease-in-out infinite;
+        }
+        .hold-btn:active {
+            background: rgba(255, 105, 180, 0.2);
+            transform: scale(0.96);
+        }
+        @keyframes breathe {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 105, 180, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 105, 180, 0.8); }
+        }
+
+        /* 转场 */
+        .slide-up {
+            transform: translateY(-100%);
+        }
+        body.light-bg {
+            background: #fff0f5;
+        }
+
+        /* 主页 */
+        .main-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff0f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d14787;
+            font-size: 22px;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.5s;
+            pointer-events: none;
+        }
+        .main-page.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 开场黑色区 -->
+    <div class="black-wrap" id="blackWrap">
+
+        <!-- 合照 -->
+        <div class="photo-box">
+            <img src="合照.jpg" alt="合照" class="game-photo">
+        </div>
+
+        <!-- 情头 + 爱心 -->
+        <div class="avatar-heart-box">
+            <div class="avatar-wrap">
+                <img src="左情头.jpg" alt="左边情头" class="avatar">
+            </div>
+
+            <svg class="heart-svg" viewBox="0 0 240 220">
+                <path class="heart-path" id="pathLeft"
+                      d="M 120 60 C 60 0, 0 25, 0 85 C 0 145, 70 175, 120 210" />
+                <path class="heart-path" id="pathRight"
+                      d="M 120 60 C 180 0, 240 25, 240 85 C 240 145, 170 175, 120 210" />
+            </svg>
+
+            <div class="avatar-wrap">
+                <img src="右情头.jpg" alt="右边情头" class="avatar">
+            </div>
+        </div>
+
+        <!-- 长按按钮 -->
+        <button class="hold-btn" id="holdBtn">长按进入</button>
+    </div>
+
+    <!-- 主页 -->
+    <div class="main-page" id="mainPage">
+        欢迎来到我们的小世界 ✨
+    </div>
+
+    <script>
+        const holdBtn = document.getElementById('holdBtn');
+        const blackWrap = document.getElementById('blackWrap');
+        const mainPage = document.getElementById('mainPage');
+        const pathLeft = document.getElementById('pathLeft');
+        const pathRight = document.getElementById('pathRight');
+
+        const lenLeft = pathLeft.getTotalLength();
+        const lenRight = pathRight.getTotalLength();
+        pathLeft.style.strokeDasharray = lenLeft;
+        pathLeft.style.strokeDashoffset = lenLeft;
+        pathRight.style.strokeDasharray = lenRight;
+        pathRight.style.strokeDashoffset = lenRight;
+
+        let progress = 0;
+        const holdDuration = 2000;
+        let isHolding = false;
+        let isCompleted = false;
+
+        function startHold() {
+            if (isCompleted) return;
+            isHolding = true;
+            const startTime = Date.now();
+            const startProgress = progress;
+
+            function animate() {
+                if (!isHolding) {
+                    progress = Math.max(0, progress - 0.03);
+                    updateLine();
+                    if (progress > 0) requestAnimationFrame(animate);
+                    return;
+                }
+                const elapsed = Date.now() - startTime;
+                progress = Math.min(1, startProgress + elapsed / holdDuration);
+                updateLine();
+                if (progress >= 1) {
+                    isCompleted = true;
+                    enterMain();
+                    return;
+                }
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function endHold() {
+            isHolding = false;
+        }
+
+        function updateLine() {
+            pathLeft.style.strokeDashoffset = lenLeft * (1 - progress);
+            pathRight.style.strokeDashoffset = lenRight * (1 - progress);
+        }
+
+        function enterMain() {
+            document.body.classList.add('light-bg');
+            setTimeout(() => {
+                blackWrap.classList.add('slide-up');
+                mainPage.classList.add('show');
+            }, 400);
+        }
+
+        holdBtn.addEventListener('mousedown', startHold);
+        holdBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startHold();
+        });
+        document.addEventListener('mouseup', endHold);
+        document.addEventListener('touchend', endHold);
+        document.addEventListener('mouseleave', endHold);
+    </script>
+
+</body>
+</html>
